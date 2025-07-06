@@ -1,0 +1,21 @@
+# Java/Spring Boot
+target/
+.gradle/
+build/
+*.iml
+*.ipr
+*.iws
+
+# Angular
+node_modules/
+dist/
+.angular/
+
+# IDEs
+.idea/
+.vscode/
+
+# Docker
+*.log
+tmp/
+.env

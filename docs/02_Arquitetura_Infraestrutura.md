@@ -7,14 +7,14 @@ A arquitetura do App EBD foi concebida para ser **moderna, escalável, segura e 
 ## 2. Diagrama de Infraestrutura na GCP
 
 ```mermaid
-%%{ init : { "theme" : "default", "themeVariables": { "primaryColor": "#e3f2fd", "edgeLabelBackground":"#ffffff", "fontSize":"14px", "nodeBorder":"#1e88e5", "tertiaryColor":"#bbdefb" }}}%%
+
 graph TD
-    %% Cliente %%
+    
     subgraph Cliente
         A[Navegador Web / App Mobile 🧑‍💻]
     end
 
-    %% GCP %%
+    
     subgraph Google Cloud Platform 
         B[Cloud DNS 🌐] --> C[Global HTTP Load Balancer 🌍]
 

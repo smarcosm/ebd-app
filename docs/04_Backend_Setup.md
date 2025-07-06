@@ -69,5 +69,4 @@ spring.jpa.properties.hibernate.format_sql=true
 
 # Configurações do servidor web (Tomcat embutido)
 server.port=8080
-
 ```

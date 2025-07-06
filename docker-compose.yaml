@@ -1,0 +1,44 @@
+
+services:
+  # Serviço do Banco de Dados PostgreSQL
+  db:
+    image: postgres:15-alpine # Imagem oficial do PostgreSQL (versão 15, leve)
+    container_name: ebd-postgres-db
+    ports:
+      - "5432:5432" # Mapeia a porta 5432 do host para a porta 5432 do contêiner
+    environment:
+      POSTGRES_DB: ebd_db        # Nome do banco de dados (deve ser o mesmo do application.properties do backend)
+      POSTGRES_USER: ebd_user    # Usuário do banco de dados
+      POSTGRES_PASSWORD: ebd_password # Senha do banco de dados
+    volumes:
+      - db_data:/var/lib/postgresql/data # Volume persistente para os dados do banco
+    restart: unless-stopped # Reinicia o contêiner a menos que seja parado manualmente
+
+  # Serviço do Backend Spring Boot
+  backend:
+    build: ./backend # Constrói a imagem a partir do Dockerfile na pasta backend
+    container_name: ebd-backend
+    ports:
+      - "8080:8080" # Mapeia a porta 8080 do host para a porta 8080 do contêiner
+    environment:
+      # Variáveis de ambiente para o Spring Boot se conectar ao PostgreSQL
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/ebd_db # 'db' é o nome do serviço do PostgreSQL no docker-compose
+      SPRING_DATASOURCE_USERNAME: ebd_user
+      SPRING_DATASOURCE_PASSWORD: ebd_password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update # Garante que o Hibernate crie/atualize o schema
+    depends_on:
+      - db # Garante que o banco de dados inicie antes do backend
+    restart: unless-stopped
+
+  # Serviço do Frontend Angular (servido por Nginx)
+  frontend:
+    build: ./frontend/ebd-app-frontend # Constrói a imagem a partir do Dockerfile na pasta do projeto Angular
+    container_name: ebd-frontend
+    ports:
+      - "80:80" # Mapeia a porta 80 do host para a porta 80 do contêiner (acesso via http://localhost)
+    depends_on:
+      - backend # Garante que o backend inicie antes do frontend
+    restart: unless-stopped
+
+volumes:
+  db_data: # Define o volume persistente para o banco de dados
